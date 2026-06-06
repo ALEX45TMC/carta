@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi Princesa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 100, 150, 0.3);
+            animation: float 6s infinite ease-in-out;
+            font-size: 20px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        .card-container {
+            position: relative;
+            z-index: 1;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #fff5f7, #ffe4e9);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90vw;
+            box-shadow: 
+                0 20px 60px rgba(255, 105, 180, 0.3),
+                0 0 0 1px rgba(255, 192, 203, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        .crown {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+            }
+            to {
+                text-shadow: 0 0 20px #ffd700, 0 0 30px #ff69b4, 0 0 40px #ffd700;
+            }
+        }
+
+        h1 {
+            color: #ff69b4;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+
+        .message {
+            color: #5a4a4a;
+            line-height: 1.8;
+            font-size: 1.1em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            color: #ff69b4;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .interactive-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .interactive-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
+        }
+
+        .hidden-message {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid #ffb6c1;
+        }
+
+        .hidden-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .signature {
+            text-align: right;
+            font-style: italic;
+            color: #ff69b4;
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: gold;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .love-meter {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .love-bar {
+            width: 100%;
+            height: 30px;
+            background: #ffe4e9;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .love-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff69b4, #ff1493, #dc143c);
+            width: 0%;
+            transition: width 2s ease;
+            border-radius: 15px;
+        }
+
+        .emoji-rain {
+            position: fixed;
+            font-size: 30px;
+            animation: fall 3s linear forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-bg" id="heartsBg"></div>
+    
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="crown">👑</div>
+            <h1>Para mi Princesa</h1>
+            
+            <div class="message">
+                Hay personas que llegan a tu vida y la transforman por completo... 
+                <span class="highlight">Tú eres esa persona especial</span> que hizo que mi mundo se llenara de colores.
+                <br><br>
+                Cada sonrisa tuya es un regalo, cada momento contigo es un tesoro, 
+                y saber que existes hace que mi corazón lata más fuerte.
+                <br><br>
+                Eres <span class="highlight">única, hermosa, increíble</span>... 
+                simplemente perfecta tal como eres.
+            </div>
+
+            <div class="love-meter">
+                <p>¿Cuánto te adoro?</p>
+                <div class="love-bar">
+                    <div class="love-fill" id="loveFill"></div>
+                </div>
+                <p id="loveText">0%</p>
+            </div>
+
+            <button class="interactive-btn" onclick="showSecret()">
+                💝 Haz clic aquí princesa 💝
+            </button>
+
+            <div class="hidden-message" id="secretMessage">
+                <p style="font-size: 1.3em; color: #ff1493;">
+                    ✨ ¡Eres la princesa de mis sueños! ✨
+                    <br><br>
+                    No importa el tiempo ni la distancia, 
+                    siempre tendrás un lugar especial en mi corazón.
+                    <br><br>
+                    Gracias por ser tú, por existir, 
+                    por hacer mi vida más bonita con solo estar en ella.
+                    <br><br>
+                    <strong>¡Te adoro un montón, princesa! 👑💕</strong>
+                </p>
+            </div>
+
+            <div class="signature">
+                Con todo mi cariño,<br>
+                Alguien que te adora 💕
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Crear corazones flotantes
+        function createHearts() {
+            const heartsBg = document.getElementById('heartsBg');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heartsBg.appendChild(heart);
+            }
+        }
+
+        // Mostrar mensaje secreto
+        function showSecret() {
+            const secret = document.getElementById('secretMessage');
+            secret.classList.add('show');
+            
+            // Llenar barra de amor
+            setTimeout(() => {
+                document.getElementById('loveFill').style.width = '100%';
+            }, 100);
+
+            // Actualizar texto
+            let count = 0;
+            const interval = setInterval(() => {
+                count += 5;
+                document.getElementById('loveText').textContent = count + '%';
+                if (count >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('loveText').textContent = '¡INFINITO! 💕';
+                }
+            }, 100);
+
+            // Lluvia de emojis
+            createEmojiRain();
+            
+            // Efecto de sparkles
+            createSparkles();
+        }
+
+        // Lluvia de emojis
+        function createEmojiRain() {
+            const emojis = ['💕', '👑', '✨', '💖', '🌟', '💗', '👸', '💝'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const emoji = document.createElement('div');
+                    emoji.className = 'emoji-rain';
+                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    emoji.style.left = Math.random() * 100 + 'vw';
+                    emoji.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(emoji);
+                    
+                    setTimeout(() => emoji.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Crear sparkles
+        function createSparkles() {
+            const card = document.getElementById('card');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = (Math.random() * card.offsetWidth) + 'px';
+                    sparkle.style.top = (Math.random() * card.offsetHeight) + 'px';
+                    card.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 1000);
+                }, i * 50);
+            }
+        }
+
+        // Interacción con el mouse
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.95) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = e.pageX + 'px';
+                sparkle.style.top = e.pageY + 'px';
+                sparkle.style.position = 'fixed';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        });
+
+        // Iniciar
+        createHearts();
+        
+        // Mensaje de bienvenida en consola
+        console.log('💕 Carta creada con mucho amor para una princesa especial 👑');
+    </script>
+</body>
+</html>
